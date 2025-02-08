@@ -4,6 +4,7 @@ import { UserModel } from "../db"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config"
+import { middleware } from "../middleware"
 
 const router = express.Router()
 
@@ -22,6 +23,11 @@ const signInSchema = z.object({
     password: z.string()
 })
 
+const updateSchema = z.object({
+    username: z.string().min(1),
+    password:  z.string().min(6),
+    email: z.string().email()
+})
 
 router.post("/signup" , async (req, res)=>{
     const validatedFields = signUpSchema.safeParse(req.body)
@@ -97,6 +103,53 @@ router.post("/signin", async (req, res)=> {
         })
     }
 
+
+})
+
+router.put("/", middleware,  async (req, res)=>{
+    const validatedFields = updateSchema.safeParse(req.body)
+
+    if(!validatedFields || !validatedFields.success){
+        res.json({
+            message: "Invalid Credentials"
+        })
+        return;
+    }
+
+    const {email , password , username} = validatedFields.data
+
+    const hashedPassword = await bcrypt.hash(password , 10)
+
+    const user = await UserModel.updateOne({
+        email,
+        password:  hashedPassword,
+        username
+    } , {
+        _id: req.userId
+    })
+
+    res.json({
+        message: "Updated succcessfully!"
+    })
+})
+
+router.get("/bulk" , async (req,res)=>{
+    const filter = req.query.filter || ""
+
+    const users = await UserModel.find({
+        "$or": [{
+            username: {
+                "$regex": filter
+            }
+        }]
+    })
+
+    res.json({
+        user: users.map(user => ({
+            username: user.username,
+            _id: user._id
+        }))
+    })
 
 })
 
