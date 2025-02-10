@@ -1,6 +1,6 @@
 import express from "express"
 import {z} from "zod"
-import { UserModel } from "../db"
+import { AccountModel, UserModel } from "../db"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config"
@@ -62,12 +62,19 @@ router.post("/signup" , async (req, res)=>{
         email
     })
 
+    const userId = user._id
+
+    const account  = await AccountModel.create({
+        userId,
+        balance: 1 + Math.random() * 100000
+    })
+
     res.json({
         user
     })
 })
 
-router.post("/signin", async (req, res)=> {
+router.post("/signin", async (req, res)=>{
     const validatedFields = signInSchema.safeParse(req.body)
 
     if(!validatedFields || !validatedFields.success){
@@ -106,7 +113,7 @@ router.post("/signin", async (req, res)=> {
 
 })
 
-router.put("/", middleware,  async (req, res)=>{
+router.put("/", middleware , async (req, res)=>{
     const validatedFields = updateSchema.safeParse(req.body)
 
     if(!validatedFields || !validatedFields.success){
@@ -133,7 +140,7 @@ router.put("/", middleware,  async (req, res)=>{
     })
 })
 
-router.get("/bulk" , async (req,res)=>{
+router.get("/bulk", async (req,res)=>{
     const filter = req.query.filter || ""
 
     const users = await UserModel.find({
