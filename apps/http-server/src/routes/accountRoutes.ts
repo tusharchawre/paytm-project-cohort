@@ -1,68 +1,70 @@
-import express from "express"
-import { middleware } from "../middleware"
-import { AccountModel } from "../db"
-import mongoose from "mongoose"
+import express from "express";
+import { middleware } from "../middleware";
+import { AccountModel } from "../db";
+import mongoose from "mongoose";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/balance" , middleware, async (req, res)=> {
-    const userId = req.userId
+router.get("/balance", middleware, async (req, res) => {
+  const userId = req.userId;
 
-    const account = await AccountModel.findOne({
-        userId
-    })
+  const account = await AccountModel.findOne({
+    userId,
+  });
 
-    if(!account) {
-        res.json({
-            message: "Account Doesnt Exist!"
-        })
-        return;
-    }
-
-    const balance = account.balance
-
+  if (!account) {
     res.json({
-        balance
-    })
-})
+      message: "Account Doesnt Exist!",
+    });
+    return;
+  }
 
+  const balance = account.balance;
 
-router.post("/transfer" , middleware , async (req, res)=> {
-    const session = await mongoose.startSession()
+  res.json({
+    balance,
+  });
+});
 
-    session.startTransaction()
-    const {amount, to} = req.body
+router.post("/transfer", middleware, async (req, res) => {
+  const session = await mongoose.startSession();
 
-    const FromAccount = await AccountModel.findOne({userId: req.userId})
+  session.startTransaction();
+  const { amount, to } = req.body;
 
-    if(!FromAccount || FromAccount.balance < amount){
-       await session.abortTransaction()
-        res.status(400).json({
-            message: "Insufficient Balance"
-        })
-        return;
-    }
+  const FromAccount = await AccountModel.findOne({ userId: req.userId });
 
-    const ToAccount = await AccountModel.findOne({userId: to})
+  if (!FromAccount || FromAccount.balance < amount) {
+    await session.abortTransaction();
+    res.status(400).json({
+      message: "Insufficient Balance",
+    });
+    return;
+  }
 
-    if(!ToAccount){
-        await session.abortTransaction()
-        res.status(400).json({
-            message: "Invalid Account"
-        })
-        return;
-    }
+  const ToAccount = await AccountModel.findOne({ userId: to });
 
-    await AccountModel.updateOne({userId: req.userId} , {$inc: {balance: -amount}}).session(session)
-    await AccountModel.updateOne({userId: to}, {$inc: amount}).session(session)
+  if (!ToAccount) {
+    await session.abortTransaction();
+    res.status(400).json({
+      message: "Invalid Account",
+    });
+    return;
+  }
 
-    await session.commitTransaction()
+  await AccountModel.updateOne(
+    { userId: req.userId },
+    { $inc: { balance: -amount } },
+  ).session(session);
+  await AccountModel.updateOne({ userId: to }, { $inc: amount }).session(
+    session,
+  );
 
-    res.json({
-        message: "Transaction successful"
-    })
+  await session.commitTransaction();
 
-})
+  res.json({
+    message: "Transaction successful",
+  });
+});
 
-
-export {router as AccountRouter}
+export { router as AccountRouter };

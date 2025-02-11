@@ -1,11 +1,11 @@
-import { LoginForm } from "../components/auth/LoginForm"
+import { LoginForm } from "../components/auth/LoginForm";
 
 const SignIn = () => {
   return (
     <div className="w-full h-screen flex items-center justify-center">
-        <LoginForm />
+      <LoginForm />
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

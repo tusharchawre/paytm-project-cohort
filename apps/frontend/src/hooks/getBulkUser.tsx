@@ -7,7 +7,7 @@ export const getBulkUser = ({ filter }: { filter: string }) => {
 
   async function getUsers() {
     const response = await axios.get(
-      "http://localhost:3000/api/v1/user/bulk/?filter=" + filter
+      "http://localhost:3000/api/v1/user/bulk/?filter=" + filter,
     );
     setUsers(response.data.user);
   }

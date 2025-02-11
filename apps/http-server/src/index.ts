@@ -1,22 +1,17 @@
-import express from  "express"
-import { connect, UserModel } from "./db"
-import { mainRouter } from "./routes"
-import cors from "cors"
+import express from "express";
+import { connect, UserModel } from "./db";
+import { mainRouter } from "./routes";
+import cors from "cors";
 
+const app = express();
 
+app.use(cors());
+app.use(express.json());
 
-const app = express()
+app.use("/api/v1", mainRouter);
 
-app.use(cors())
-app.use(express.json())
+connect();
 
-app.use("/api/v1", mainRouter)
-
-
-connect()
-
-
-
-app.listen(3000 , ()=>{
-    console.log("Listening")
-})
+app.listen(3000, () => {
+  console.log("Listening");
+});

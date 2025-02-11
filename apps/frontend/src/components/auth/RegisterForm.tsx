@@ -1,4 +1,4 @@
-import { Button } from "../ui/Button"
+import { Button } from "../ui/Button";
 
 export const RegisterForm = () => {
   return (
@@ -8,24 +8,32 @@ export const RegisterForm = () => {
 
       <div className="my-2 w-full">
         <p>Username</p>
-        <input className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1" type="text" placeholder="John_Doe" />
+        <input
+          className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1"
+          type="text"
+          placeholder="John_Doe"
+        />
       </div>
 
       <div className="my-2 w-full">
         <p>Email</p>
-        <input className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1" type="email" placeholder="John_Doe@email.com" />
+        <input
+          className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1"
+          type="email"
+          placeholder="John_Doe@email.com"
+        />
       </div>
 
       <div className="my-2 w-full">
         <p>Password</p>
-        <input className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1" type="password" placeholder="******" />
+        <input
+          className="border-[0.5px] w-full border-black/10 outline-none rounded-md px-4 py-1"
+          type="password"
+          placeholder="******"
+        />
       </div>
 
-      <Button>
-        Sign Up
-      </Button>
-
-
+      <Button>Sign Up</Button>
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,5 @@
 const SendMoney = () => {
-  return (
-    <div>SendMoney</div>
-  )
-}
+  return <div>SendMoney</div>;
+};
 
-export default SendMoney
+export default SendMoney;
