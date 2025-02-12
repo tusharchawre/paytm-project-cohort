@@ -160,4 +160,18 @@ router.get("/bulk", async (req, res) => {
   });
 });
 
+router.get("/", middleware ,async (req, res)=> {
+
+  const userId = req.userId
+
+  const user = await UserModel.findOne({
+    _id: userId
+  })
+
+  res.json({
+    user
+  })
+
+})
+
 export { router as UserRouter };

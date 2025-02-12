@@ -3,6 +3,7 @@ import { Navbar } from "../components/ui/Navbar";
 import { UserItem } from "../components/ui/UserItem";
 import { getBalance } from "../hooks/getBalance";
 import { getBulkUser } from "../hooks/getBulkUser";
+import { getUser } from "../hooks/getUser";
 
 export interface User {
   username: string;
@@ -15,9 +16,15 @@ const Dashboard = () => {
   const balance = getBalance();
   const users: User[] = getBulkUser({ filter });
 
+  const currentUser = getUser()
+
+  if (!currentUser) {
+    return null;
+  }
+
   return (
     <>
-      <Navbar username="Tushar" />
+      <Navbar username={currentUser.username} />
       <div className="px-8 py-4">
         <div className=" flex justify-between">
           <h1>Users</h1>
@@ -35,7 +42,8 @@ const Dashboard = () => {
           {users.length ? (
             <>
               {users.map((user, idx) => (
-                <UserItem username={user.username} to={user._id} key={idx} />
+                (user.username === currentUser.username) ? (null) :
+                  <UserItem username={user.username} to={user._id} key={idx} />
               ))}
             </>
           ) : (

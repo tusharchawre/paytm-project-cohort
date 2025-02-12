@@ -6,7 +6,7 @@ export const getBalance = () => {
 
   async function fetchBalance() {
     const response = await axios.get(
-      `http://localhost:3000/api/v1/account/balance`,
+      `${import.meta.env.VITE_HTTP_URl}/account/balance`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
