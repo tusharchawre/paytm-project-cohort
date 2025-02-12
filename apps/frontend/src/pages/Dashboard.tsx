@@ -6,6 +6,7 @@ import { getBulkUser } from "../hooks/getBulkUser";
 
 export interface User {
   username: string;
+  _id: string
 }
 
 const Dashboard = () => {
@@ -34,7 +35,7 @@ const Dashboard = () => {
           {users.length ? (
             <>
               {users.map((user, idx) => (
-                <UserItem username={user.username} key={idx} />
+                <UserItem username={user.username} to={user._id} key={idx} />
               ))}
             </>
           ) : (
